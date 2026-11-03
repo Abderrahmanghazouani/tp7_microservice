@@ -85,6 +85,7 @@ spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 spring.jpa.hibernate.ddl-auto=update
 spring.data.rest.base-path=/api
+server.port=8081
 ```
 
 - Pas besoin de `driver-class-name`, ni de `dialect`, ni de `SessionFactory` : **Spring Boot les déduit tout seul** (auto-configuration).
@@ -168,8 +169,8 @@ Il y a **6 tests** : save → 201, delete → 204, delete d'un id inexistant →
 
 Avec la seule dépendance `springdoc-openapi-starter-webmvc-ui`, Spring Boot génère :
 
-- la **description OpenAPI 3** de l'API : `http://localhost:8080/v3/api-docs` ;
-- l'**interface Swagger UI** : `http://localhost:8080/swagger-ui.html`.
+- la **description OpenAPI 3** de l'API : `http://localhost:8081/v3/api-docs` ;
+- l'**interface Swagger UI** : `http://localhost:8081/swagger-ui.html`.
 
 Les annotations `@Tag`, `@Operation(summary = ...)`, `@ApiResponse` et `@Parameter` enrichissent la documentation. Le bouton **Try it out** permet d'appeler l'API directement depuis le navigateur :
 
@@ -187,6 +188,7 @@ On voit aussi dans Swagger les endpoints générés automatiquement par **Spring
 | Avec Spring Data REST, le repository est exposé sur `/students/{id}` et entre en conflit avec `/students/all`, `/students/count`… | `spring.data.rest.base-path=/api` |
 | `@SpringBootTest` + `@Mock` démarre tout Spring, donc il faut MySQL, alors que les mocks ne sont même pas utilisés par le contexte | `@ExtendWith(MockitoExtension.class)` : vrai test unitaire, rapide, sans base |
 | Dates renvoyées **un jour plus tôt** (1985-09-01 → 1985-08-31) : `java.util.Date` + fuseau du PC (Maroc, UTC+1) différent de celui de JSON / MySQL (UTC) | `TimeZone.setDefault(UTC)` au démarrage de l'application |
+| Le port **8080** est déjà occupé par **Apache (XAMPP)** sur ce PC : « Port 8080 was already in use » | `server.port=8081` |
 | Les packages de l'énoncé ne sont pas cohérents (`com.example.studentmanagement.*` / `com.example.demo.*`) | Tout est dans `com.example.demo` |
 
 ## Lancer le projet
@@ -194,7 +196,7 @@ On voit aussi dans Swagger les endpoints générés automatiquement par **Spring
 1. Démarrer **MySQL** (XAMPP → *Start* sur MySQL).
 2. Ouvrir le dossier dans IntelliJ, attendre le téléchargement Maven.
 3. Lancer `StudentManagementApplication` et attendre `Started StudentManagementApplication in … seconds`.
-4. Ouvrir `http://localhost:8080/swagger-ui.html`.
+4. Ouvrir `http://localhost:8081/swagger-ui.html`.
 5. Tests : clic droit sur `StudentControllerTest`, puis **Run**, ou `mvn test`.
 
 ---
